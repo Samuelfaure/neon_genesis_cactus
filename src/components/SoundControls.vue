@@ -10,8 +10,12 @@
 </template>
 
 <script>
+import Vue from "vue";
+import VueNativeSock from "vue-native-websocket";
 import p5 from "p5";
 import "p5/lib/addons/p5.sound";
+
+Vue.use(VueNativeSock, "ws://192.168.0.44:80");
 
 export default {
   name: "SoundControls",
@@ -39,7 +43,7 @@ export default {
       this.fft = new p5.FFT();
       this.fft.setInput(this.mic);
 
-      s.createCanvas(600, 600);
+      s.createCanvas(500, 500);
       // Anti-aliasing
       s.smooth();
 
@@ -56,11 +60,14 @@ export default {
       this.level = this.fft.getEnergy("bass");
 
       s.ellipseMode(s.CENTER);
-      this.radius = this.calculRadius();
-      s.ellipse(300, 300, this.radius, this.radius);
+      this.radius = this.calculRadius(s);
+      s.ellipse(250, 250, this.radius, this.radius);
+
+      this.$socket.send(this.radius * 2);
     },
-    calculRadius() {
-      let radius = this.level * 6 - 800;
+    calculRadius(s) {
+      this.level -= 125;
+      let radius = s.map(this.level, 0, 100, 0, 500);
       if (radius < 0) radius = 0;
       return radius;
     },
