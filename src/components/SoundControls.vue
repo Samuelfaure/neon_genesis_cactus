@@ -2,9 +2,10 @@
   <div>
     <button @click="start">Start</button>
     <button @click="resume">Resume</button>
-    <button @click="log">log</button>
     <p>Level : {{ level }}</p>
+    <p>SmoothedLevel : {{ level }}</p>
     <p>Radius : {{ radius }}</p>
+    <p>Power : {{ power }}</p>
     <div id="canvas"></div>
   </div>
 </template>
@@ -23,18 +24,17 @@ export default {
     return {
       fft: null,
       level: 0,
+      // smoothedLevel: 0,
       radius: 0,
+      power: 0,
       mic: null,
-      myp5: null
+      myp5: null,
+      pearDetect: null
     };
   },
   methods: {
     resume() {
       this.context.resume();
-      console.log(this.context);
-    },
-    log() {
-      console.log(this.level);
     },
     setupCanvas(s) {
       this.mic = new p5.AudioIn();
@@ -42,34 +42,44 @@ export default {
       this.context = s.getAudioContext();
       this.fft = new p5.FFT();
       this.fft.setInput(this.mic);
+      this.peakDetect = new p5.PeakDetect();
 
       s.createCanvas(500, 500);
       // Anti-aliasing
-      s.smooth();
+      s.smooth(10);
 
       s.fill(0, 155, 0);
       s.stroke(0, 0, 0);
       s.strokeWeight(2);
 
-      s.frameRate(30);
+      // s.frameRate(30);
     },
     drawCanvas(s) {
       s.background(255);
 
       this.fft.analyze();
-      this.level = this.fft.getEnergy("bass");
+      //this.level = this.fft.getEnergy("lowMid");
+
+      this.peakDetect.update(this.fft);
+
+      //this.smoothedLevel += (this.level - this.smoothedLevel) * 0.6;
 
       s.ellipseMode(s.CENTER);
-      this.radius = this.calculRadius(s);
+
+      if (this.peakDetect.isDetected) {
+        this.radius = 400;
+        this.power = 1020;
+      } else {
+        this.radius *= 0.95;
+        this.power *= 0.95;
+      }
+
+      //this.radius = s.map(this.smoothedLevel, 150, 255, 0, 500, true);
       s.ellipse(250, 250, this.radius, this.radius);
 
-      this.$socket.send(this.radius * 2);
-    },
-    calculRadius(s) {
-      this.level -= 125;
-      let radius = s.map(this.level, 0, 100, 0, 500);
-      if (radius < 0) radius = 0;
-      return radius;
+      //this.power = s.map(this.smoothedLevel, 150, 255, 0, 1022, true);
+
+      this.$socket.send(this.power);
     },
     start() {
       const vm = this;
