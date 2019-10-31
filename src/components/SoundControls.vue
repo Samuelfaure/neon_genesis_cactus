@@ -24,12 +24,10 @@ export default {
     return {
       fft: null,
       level: 0,
-      // smoothedLevel: 0,
       radius: 0,
       power: 0,
-      mic: null,
       myp5: null,
-      pearDetect: null
+      peakDetect: null
     };
   },
   methods: {
@@ -37,32 +35,24 @@ export default {
       this.context.resume();
     },
     setupCanvas(s) {
-      this.mic = new p5.AudioIn();
-      this.mic.start();
+      let mic = new p5.AudioIn();
+      mic.start();
       this.context = s.getAudioContext();
       this.fft = new p5.FFT();
-      this.fft.setInput(this.mic);
+      this.fft.setInput(mic);
       this.peakDetect = new p5.PeakDetect();
 
       s.createCanvas(500, 500);
-      // Anti-aliasing
-      s.smooth(10);
 
       s.fill(0, 155, 0);
       s.stroke(0, 0, 0);
       s.strokeWeight(2);
-
-      // s.frameRate(30);
     },
     drawCanvas(s) {
       s.background(255);
 
       this.fft.analyze();
-      //this.level = this.fft.getEnergy("lowMid");
-
       this.peakDetect.update(this.fft);
-
-      //this.smoothedLevel += (this.level - this.smoothedLevel) * 0.6;
 
       s.ellipseMode(s.CENTER);
 
@@ -74,10 +64,7 @@ export default {
         this.power *= 0.95;
       }
 
-      //this.radius = s.map(this.smoothedLevel, 150, 255, 0, 500, true);
       s.ellipse(250, 250, this.radius, this.radius);
-
-      //this.power = s.map(this.smoothedLevel, 150, 255, 0, 1022, true);
 
       this.$socket.send(this.power);
     },
