@@ -1,7 +1,6 @@
 <template>
   <div>
     <button @click="start">Start</button>
-    <button @click="resume">Resume</button>
     <p>Level : {{ level }}</p>
     <p>SmoothedLevel : {{ level }}</p>
     <p>Radius : {{ radius }}</p>
@@ -11,12 +10,12 @@
 </template>
 
 <script>
-import Vue from "vue";
-import VueNativeSock from "vue-native-websocket";
+// import Vue from "vue";
+// import VueNativeSock from "vue-native-websocket";
 import p5 from "p5";
 import "p5/lib/addons/p5.sound";
 
-Vue.use(VueNativeSock, "ws://192.168.0.44:80");
+// Vue.use(VueNativeSock, "ws://192.168.0.44:80");
 
 export default {
   name: "SoundControls",
@@ -31,9 +30,9 @@ export default {
     };
   },
   methods: {
-    resume() {
-      this.context.resume();
-    },
+    // resume() {
+    //   this.context.resume();
+    // },
     setupCanvas(s) {
       let mic = new p5.AudioIn();
       mic.start();
@@ -66,7 +65,7 @@ export default {
 
       s.ellipse(250, 250, this.radius, this.radius);
 
-      this.$socket.send(this.power);
+      // this.$socket.send(this.power);
     },
     start() {
       const vm = this;

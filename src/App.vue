@@ -1,16 +1,17 @@
 <template>
   <div id="app">
-    <sound-controls />
+    <button @click="startContext">Neon Genesis Cactus</button>
+    <router-view />
   </div>
 </template>
 
 <script>
-import SoundControls from "./components/SoundControls.vue";
-
 export default {
   name: "App",
-  components: {
-    SoundControls
+  methods: {
+    startContext() {
+      this.$router.push({ path: "sound" });
+    }
   }
 };
 </script>

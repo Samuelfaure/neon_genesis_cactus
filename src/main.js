@@ -1,10 +1,13 @@
 import Vue from "vue";
 import App from "./App.vue";
+import VueRouter from "vue-router";
+import router from "@/router";
 
-// Object.defineProperty(Vue.prototype, "$p5", { value: p5 });
+Vue.use(VueRouter);
 
 Vue.config.productionTip = false;
 
-new Vue({
+const app = new Vue({ // eslint-disable-line
+  router,
   render: h => h(App)
 }).$mount("#app");
