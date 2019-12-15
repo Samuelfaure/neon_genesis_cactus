@@ -10,12 +10,16 @@
 </template>
 
 <script>
-// import Vue from "vue";
-// import VueNativeSock from "vue-native-websocket";
+import Vue from "vue";
+import VueNativeSock from "vue-native-websocket";
 import p5 from "p5";
 import "p5/lib/addons/p5.sound";
 
-// Vue.use(VueNativeSock, "ws://192.168.0.44:80");
+Vue.use(VueNativeSock, "ws://192.168.0.17:80", {
+  reconnection: true, // (Boolean) whether to reconnect automatically (false)
+  reconnectionAttempts: 5, // (Number) number of reconnection attempts before giving up (Infinity),
+  reconnectionDelay: 3000 // (Number) how long to initially wait before attempting a new (1000)
+}); // 44 for my other module
 
 export default {
   name: "SoundControls",
@@ -65,7 +69,7 @@ export default {
 
       s.ellipse(250, 250, this.radius, this.radius);
 
-      // this.$socket.send(this.power);
+      this.$socket.send(this.power);
     },
     start() {
       const vm = this;
