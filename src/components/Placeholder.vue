@@ -1,9 +1,9 @@
 <template>
-  <p>Click on Start</p>
+  <p>No experience selected</p>
 </template>
 
 <script>
 export default {
-  name: "PlaceHolder"
+  name: "Placeholder"
 };
 </script>

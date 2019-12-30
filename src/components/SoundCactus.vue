@@ -1,6 +1,7 @@
 <template>
   <div>
-    <button @click="start">Start</button>
+    <h3 class="text-center">Neon Genesis Cactus</h3>
+    <v-btn depressed small color="green accent-1" @click="start">Start</v-btn>
     <p>Level : {{ level }}</p>
     <p>SmoothedLevel : {{ level }}</p>
     <p>Radius : {{ radius }}</p>
@@ -22,7 +23,7 @@ Vue.use(VueNativeSock, "ws://192.168.0.17:80", {
 }); // 44 for my other module
 
 export default {
-  name: "SoundControls",
+  name: "SoundCactus",
   data() {
     return {
       fft: null,
@@ -34,9 +35,6 @@ export default {
     };
   },
   methods: {
-    // resume() {
-    //   this.context.resume();
-    // },
     setupCanvas(s) {
       let mic = new p5.AudioIn();
       mic.start();
